@@ -2,6 +2,7 @@ package com.laurakovacic.reactivemongo.web.fn;
 
 import com.laurakovacic.reactivemongo.model.BeerDTO;
 import com.laurakovacic.reactivemongo.services.BeerService;
+import com.mongodb.internal.connection.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -41,7 +42,13 @@ public class BeerHandler {
 
     public Mono<ServerResponse> updateBeer(ServerRequest request) {
         return request.bodyToMono(BeerDTO.class)
-                .flatMap(beerDTO -> beerService.updateBeer(request.pathVariable("beerId"), beerDTO))
+                .map(beerDTO -> beerService.updateBeer(request.pathVariable("beerId"), beerDTO))
                 .flatMap(savedDto -> ServerResponse.noContent().build());
+    }
+
+    public Mono<ServerResponse> patchBeerById(ServerRequest request) {
+        return request.bodyToMono(BeerDTO.class)
+                .map(beerDTO -> beerService.patchBeer(request.pathVariable("beerId"), beerDTO))
+                .flatMap(patchedDto -> ServerResponse.noContent().build());
     }
 }

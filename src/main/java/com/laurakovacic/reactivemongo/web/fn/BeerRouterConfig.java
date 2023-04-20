@@ -26,6 +26,7 @@ public class BeerRouterConfig {
                 .GET(BEER_PATH_ID, accept(APPLICATION_JSON), handler::getBeerById)
                 .POST(BEER_PATH, accept(APPLICATION_JSON), handler::createBeer)
                 .PUT(BEER_PATH_ID, accept(APPLICATION_JSON), handler::updateBeer)
+                .PATCH(BEER_PATH_ID, accept(APPLICATION_JSON), handler::patchBeerById)
                 .build();
     }
 }
