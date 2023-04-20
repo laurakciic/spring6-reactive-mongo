@@ -15,8 +15,15 @@ public class BeerHandler {
     private final BeerService beerService;
 
     public Mono<ServerResponse> listBeers(ServerRequest request) {
-        return ServerResponse.ok()
+        return ServerResponse
+                .ok()
                 .body(beerService.listBeers(), BeerDTO.class);
                 // BeerDTO.class so the framework knows how to parse that into JSON with Jackson
+    }
+
+    public Mono<ServerResponse> getBeerById(ServerRequest request) {
+        return ServerResponse
+                .ok()
+                .body(beerService.getById(request.pathVariable("beerId")), BeerDTO.class);
     }
 }
