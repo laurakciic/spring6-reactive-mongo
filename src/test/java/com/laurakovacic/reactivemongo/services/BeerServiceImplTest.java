@@ -40,6 +40,21 @@ class BeerServiceImplTest {
     }
 
     @Test
+    void findFirstByBeerName() {
+        BeerDTO beerDto = getSavedBeerDto();
+
+        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+        Mono<BeerDTO> foundDto = beerService.findFirstByBeerName(beerDto.getBeerName());
+
+        foundDto.subscribe(dto -> {
+            System.out.println(dto.toString());
+            atomicBoolean.set(true);
+        });
+
+        await().untilTrue(atomicBoolean);
+    }
+
+    @Test
     @DisplayName("Test Save Beer Using Subscriber")
     void saveBeer() {
 
@@ -73,7 +88,7 @@ class BeerServiceImplTest {
     @DisplayName("Test Update Beer Using Block")
     void updateUseBlock() {
         final String newName = "New Beer Name";
-        BeerDTO savedBeerDto = getSavedDto();
+        BeerDTO savedBeerDto = getSavedBeerDto();
         savedBeerDto.setBeerName(newName);
 
         BeerDTO updatedDto = beerService.saveBeer(Mono.just(savedBeerDto)).block();
@@ -105,7 +120,7 @@ class BeerServiceImplTest {
 
     @Test
     void deleteBeer() {
-        BeerDTO beerToDelete = getSavedDto();
+        BeerDTO beerToDelete = getSavedBeerDto();
 
         beerService.deleteBeerById(beerToDelete.getId()).block();
 
@@ -130,7 +145,7 @@ class BeerServiceImplTest {
         return new BeerMapperImpl().beerToBeerDto(getTestBeer());
     }
 
-    public BeerDTO getSavedDto() {
+    public BeerDTO getSavedBeerDto() {
         return beerService.saveBeer(Mono.just(getTestBeerDto())).block();
     }
 }
